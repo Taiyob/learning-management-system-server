@@ -25,6 +25,7 @@ async function run() {
     await client.connect();
 
     const usersCollection = client.db("learning-management-system").collection("usersDB");
+    const courseCollection = client.db("learning-management-system").collection("coursesDB");
 
     // token genarate
     function createToken(user) {
@@ -133,6 +134,17 @@ async function run() {
           .send({ error: "Internal Server Error", message: error.message });
       }
     });
+
+    //create course
+    app.post('/create-course', verifyToken, async (req, res) => {
+      try{
+        const body = req.body;
+        const result = await courseCollection.insertOne(body);
+        res.status(201).send({message: "New course created", result});
+      }catch(error){
+        res.status(500).send({ error: "Internal Server Error", message: error.message})
+      }
+    })
 
     await client.db("admin").command({ ping: 1 });
     console.log(
