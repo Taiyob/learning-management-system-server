@@ -150,7 +150,17 @@ async function run() {
       }catch(error){
         res.status(500).send({ error: "Internal Server Error", message: error.message})
       }
-    })
+    });
+
+    //get all course
+    app.get('/get-all-course', async (req, res) => {
+      try{
+        const result = await courseCollection.find().toArray();
+        res.status(201).send({message: "List of all courses", result});
+      }catch(error){
+        res.status(500).send({ error: "Internal Server Error", message: error.message})
+      }
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
